@@ -1,5 +1,5 @@
 from agent import EpsilonGreedy,UCB,ThompsonSampling,ThompsonSamplingNormal
-from ReinforcementLearning.mine.environment import MAB
+from ReinforcementLearning.mine.MBA.environment import MAB
 import argparse
 import matplotlib.pyplot as plt
 import torch
@@ -11,7 +11,7 @@ def parse_opt():
     parser.add_argument("--num_steps",default=5000,type=int)
     parser.add_argument("--dist",default="Normal",type=str,help="Normal or Bernoulli")
     parser.add_argument("--seed",default=None,type=int)
-    return parser.parse_args(args=[]) 
+    return parser.parse_args() 
         
 def plot_metrics(agents,agent_names):
     plt.figure(1,figsize=(720,480))
