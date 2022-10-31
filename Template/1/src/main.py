@@ -1,5 +1,5 @@
-from agent import EpsilonGreedy,UCB,ThompsonSampling,ThompsonSamplingNormal
-from ReinforcementLearning.mine.MBA.environment import MAB
+from agent import EpsilonGreedy,UCB,ThompsonSampling
+from environment import MAB
 import argparse
 import matplotlib.pyplot as plt
 import torch
@@ -8,7 +8,7 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument("--k_arm",default=10,type=int)
     parser.add_argument("--const_flag",default=False,type=bool)
-    parser.add_argument("--num_steps",default=5000,type=int)
+    parser.add_argument("--num_steps",default=1000,type=int)
     parser.add_argument("--dist",default="Normal",type=str,help="Normal or Bernoulli")
     parser.add_argument("--seed",default=None,type=int)
     return parser.parse_args() 
@@ -48,7 +48,7 @@ def main(opt):
     #         eval(agent_names[2])(opt.k_arm,opt.const_flag))
 
     # 正态时变环境演示
-    agent_names = ("EpsilonGreedy", "EpsilonGreedy","ThompsonSamplingNormal")
+    agent_names = ("EpsilonGreedy", "UCB","ThompsonSampling")
     agents = (eval(agent_names[0])(opt.k_arm,False,0.01),\
             eval(agent_names[1])(opt.k_arm,True,0.01),
             eval(agent_names[2])(opt.k_arm,opt.const_flag))
@@ -60,7 +60,7 @@ def main(opt):
                 r,ba = env.step(a)
                 agent.update(a,r)
                 if ba:
-                    agent.ba_count += 1 
+                    agent.bestcount += 1 
                 agent.update_metric()
             print("{}:{}".format(agent_names[i],agent.rewards[-1]))
     run(opt.num_steps)

@@ -1,5 +1,4 @@
 from cmath import sqrt
-import imp
 import torch
 import torch.distributions as D
 import numpy as np
@@ -61,3 +60,23 @@ class UCB(agent):
         self.reward+=r
         self.counts[a]+=1
         self.Q[a]+=(r-self.Q[a])/self.counts[a]
+        
+#???(不太会)
+class ThompsonSampling(agent):
+    def __init__(self, K, const_flag):
+        super(K, const_flag)
+        self.contribute1=torch.ones(K)
+        self.contribute2=torch.ones(K)
+        self.d=D.beta(self.contribute1,self.contribute2)
+        
+    def get_action(self):
+        a=torch.max(self.d.sample(),0)[1]
+        return a
+    
+    def update(self, a, r):
+        self.timesteps+=1
+        self.reward+=r
+        if r>1:
+            self.contribute1[a]+=torch.abs(r)
+        else:
+            self.contribute2[a]+=torch.abs(r)
